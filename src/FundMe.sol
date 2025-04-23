@@ -23,10 +23,7 @@ contract FundMe {
     }
 
     function fund() public payable {
-        require(
-            msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD,
-            "Less than minimum amount of eth."
-        );
+        require(msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD, "Less than minimum amount of eth.");
         s_addressToAmountFunded[msg.sender] += msg.value;
         s_funders.push(msg.sender);
     }
@@ -49,13 +46,11 @@ contract FundMe {
         // bool success = payable(msg.sender).send(address(this).balance);
         // require(success,"error while withdraw");
         s_funders = new address[](0);
-        (bool callSuccess, ) = payable(msg.sender).call{
-            value: address(this).balance
-        }("");
+        (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Withdrawal failed.");
     }
 
-    function withdrawCheaper()  public onlyOwner {
+    function withdrawCheaper() public onlyOwner {
         uint256 funderLength = s_funders.length;
         for (uint256 idx = 0; idx < funderLength; idx++) {
             address addressoffunder = s_funders[idx];
@@ -65,12 +60,9 @@ contract FundMe {
         // bool success = payable(msg.sender).send(address(this).balance);
         // require(success,"error while withdraw");
         s_funders = new address[](0);
-        (bool callSuccess, ) = payable(msg.sender).call{
-            value: address(this).balance
-        }("");
+        (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Withdrawal failed.");
     }
-
 
     receive() external payable {
         fund();
@@ -81,9 +73,7 @@ contract FundMe {
     }
 
     // getter functions
-    function getAdressToAmountFunded(
-        address fundingAddress
-    ) external view returns (uint256) {
+    function getAdressToAmountFunded(address fundingAddress) external view returns (uint256) {
         return s_addressToAmountFunded[fundingAddress];
     }
 
